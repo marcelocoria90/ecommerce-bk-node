@@ -1,0 +1,23 @@
+[
+	{
+		"title": "product10",
+		"description": "desc 1",
+		"code": "123",
+		"price": 7200,
+		"status": true,
+		"stock": 90,
+		"thumbnails": "www.google.com/images",
+		"id": "692d533e-592c-49eb-a0e4-4cdcc5d599fb",
+		"category": "cat1"
+	},
+	{
+		"title": "product2",
+		"description": "desc 2",
+		"code": "123",
+		"price": 300,
+		"status": true,
+		"stock": 20,
+		"thumbnails": "www.google.com/images",
+		"id": "3a2345cc-00ce-4074-82b1-eb2148ea947c"
+	}
+]
