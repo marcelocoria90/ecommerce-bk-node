@@ -1,0 +1,32 @@
+[
+  {
+    "id": "366e398a-8ef4-43a1-b760-0ba63a138ead",
+    "products": [
+      {
+        "id": "3a2345cc-00ce-4074-82b1-eb2148ea947c",
+        "quantity": 5
+      },
+      {
+        "id": "892327ef-adfa-450f-acdc-e22328128610",
+        "quantity": 1
+      },
+      {
+        "id": "692d533e-592c-49eb-a0e4-4cdcc5d599fb",
+        "quantity": 3
+      }
+    ],
+    "timestamp": "4/2/2023, 9:08:12 PM"
+  },
+  {
+    "id": "388a6074-0f0b-4d34-8bd2-e226377ba8e0",
+    "products": [
+      {
+        "id": "692d533e-592c-49eb-a0e4-4cdcc5d599fb"
+      },
+      {
+        "id": "3a2345cc-00ce-4074-82b1-eb2148ea947c"
+      }
+    ],
+    "timestamp": "4/2/2023, 9:08:13 PM"
+  }
+]

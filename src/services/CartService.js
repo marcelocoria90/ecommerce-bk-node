@@ -1,100 +1,91 @@
-import fs from 'fs/promises'
+/* eslint-disable no-undef */
 import { randomUUID } from 'crypto'
+import { FileManager } from './FileManager.js'
+
+const FM = new FileManager('./database/carts.json')
 
 export class CartService {
+  constructor (path) {
+    this.path = path
+  }
 
-    constructor(path) {
-        this.path = path
+  async createCart (cart) {
+    try {
+      console.log(cart)
+      const newProducts = []
+      cart.products.forEach(x => {
+        newProducts.push(x)
+      })
+      const newCart = {
+        id: randomUUID(),
+        products: newProducts.map(x => x),
+        timestamp: new Date().toLocaleString()
+      }
+      return await FM.createItem(newCart)
+    } catch (e) {
+      console.log(e.message)
+      return {
+        succsess: false,
+        error: e.message
+      }
     }
+  }
 
-    async createCart(cart) {
-        try{
-            const json = await fs.readFile(this.path, 'utf-8')
-            let products = []
-            cart.map(x => {
-                products.push(x)
-            })
-
-            const cartsObject = JSON.parse(json)
-
-            const newCart = {
-                id: randomUUID(),
-                products: products,
-                timestamp: new Clock()/*new Date().toLocaleString("es-US"),*/
-            }
-
-            cartsObject.push(newCart)
-
-            const nuevoJson = JSON.stringify(cartsObject, null, 2)
-            await fs.writeFile(this.path, nuevoJson)
-            return {
-                succsess: true,
-                message: 'Cart created'
-            }
-        } catch (e) {
-            console.log(e.message)
-            return {
-                succsess: false,
-                error: e.message
-            }
-        }
+  async getCartById (cid) {
+    try {
+      const { data } = await FM.getItemById(cid)
+      const { products } = data
+      const idProducts = []
+      products.map(x => {
+        return idProducts.push(x.id)
+      })
+      return {
+        success: true,
+        data: idProducts
+      }
+    } catch (e) {
+      console.error(e)
+      return {
+        success: false,
+        message: e.message
+      }
     }
+  }
 
-    async getCartById(cid) {
-        try {
-            const carts = await fs.readFile(this.path,'utf-8')
-            const cartsObject = JSON.parse(carts)
-            const cart = cartsObject.find(x => x.id === cid)
-            const { products } = cart
-            return {
-                success: true,
-                data: products
-            }
-        } catch (e) {
-            console.error(e)
-            return{
-                success: false,
-                message: e.message
-            }
-        }
+  async createProductCart (cid, pid) {
+    try {
+      const { data } = await FM.getList()
+      const cart = data.find(x => x.id === cid)
+      const { products } = cart
+      console.log(products)
+      const existProduct = products.find(x => x.id === pid)
+
+      if (!existProduct) {
+        products.push({
+          id: pid,
+          quantity: 1
+        })
+      } else {
+        existProduct.quantity += 1
+      }
+
+      console.log(products)
+
+      await FM.save()
+      //   console.log(existProduct)
+      //   const nuevoJson = JSON.stringify(cartsObject, null, 2)
+      //   await FM.writeFile(this.path, nuevoJson)
+
+      return {
+        success: true,
+        message: 'Product added to cart'
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.message
+      }
     }
-
-    async createProductCart(cid, pid) {
-        try {
-            const carts = await fs.readFile(this.path,'utf-8')
-            const cartsObject = JSON.parse(carts)
-            const cart = cartsObject.find(x => x.id === cid)
-            const { products } = cart
-            
-            const existProduct =  products.map(x => {
-                if(x.id === pid){
-                    x.quantity += 1
-                    console.log(x.quantity)
-                }else{
-                    return true
-                }
-            })
-
-            if(!existProduct){
-                products.push({
-                    id: pid,
-                    quantity: 1
-                })
-            }
-            console.log(existProduct)
-            const nuevoJson = JSON.stringify(cartsObject, null, 2)
-            await fs.writeFile(this.path, nuevoJson)
-
-            return {
-                success: true,
-                message: 'Product added to cart'
-            }
-        } catch (e) {
-            console.log(e)
-            return {
-                success: false,
-                message: e.message
-            }
-        }
-    }
+  }
 }
