@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 import { randomUUID } from 'crypto'
-import { FileManager } from './FileManager.js'
+import { FileManager } from './file.manager.js'
 
 const FM = new FileManager('./database/carts.json')
 
-export class CartService {
+class CartService {
   constructor (path) {
     this.path = path
   }
@@ -25,7 +25,7 @@ export class CartService {
     } catch (e) {
       console.log(e.message)
       return {
-        succsess: false,
+        success: false,
         error: e.message
       }
     }
@@ -72,9 +72,6 @@ export class CartService {
       console.log(products)
 
       await FM.save()
-      //   console.log(existProduct)
-      //   const nuevoJson = JSON.stringify(cartsObject, null, 2)
-      //   await FM.writeFile(this.path, nuevoJson)
 
       return {
         success: true,
@@ -89,3 +86,5 @@ export class CartService {
     }
   }
 }
+const path = './database/carts.json'
+export const cartFile = new CartService(path)

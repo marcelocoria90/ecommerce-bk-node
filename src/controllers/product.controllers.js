@@ -1,18 +1,28 @@
 import { request, response } from 'express'
-import { FileManager } from '../services/FileManager.js'
-import { Product } from '../entitys/Product.js'
+import { FileManager } from '../dao/manager/file.manager.js'
+import { Product } from '../dao/entities/Product.js'
+import { productManager as PM } from '../dao/manager/products.manager.js'
 
 const path = './database/products.json'
 const productService = new FileManager(path)
 
 const getProducts = async (req = request, res = response) => {
   try {
-    let products = await productService.getList()
+    let products = await PM.getList()/* await productService.getList() */
     if (req.query.limit) {
       products = products.slice(0, req.query.limit)
     }
-    if (!products.success) { throw new Error('SERVICE_ERROR') }
+    // if (!products.success) { throw new Error('SERVICE_ERROR') }
     res.status(200).json(products)
+  } catch (e) {
+    res.status(500).json({ ERROR: `${e.message}` })
+  }
+}
+
+const renderProducts = async (req = request, res = response) => {
+  try {
+    const products = await PM.getList()
+    res.render('productos', { pageTitle: 'Productos ✅', products })
   } catch (e) {
     res.status(500).json({ ERROR: `${e.message}` })
   }
@@ -28,7 +38,19 @@ const getProductById = async (req = request, res = response) => {
   }
 }
 
-const createProduct = async (req, res) => {
+const newProduct = async (req, res, next) => {
+  try {
+    const data = req.body
+    const result = await PM.save(data)
+    // console.log(result)
+    res.json(result)
+  } catch (e) {
+    res.status(404).json(e.message)
+    next()
+  }
+}
+
+const createProduct = async (req, res, next) => {
   try {
     const product = new Product({
       ...req.body
@@ -65,4 +87,12 @@ const deleteProduct = async (req, res) => {
   }
 }
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct }
+export {
+  getProducts,
+  getProductById,
+  createProduct,
+  newProduct,
+  updateProduct,
+  deleteProduct,
+  renderProducts
+}
