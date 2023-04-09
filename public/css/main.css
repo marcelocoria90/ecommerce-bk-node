@@ -2,6 +2,42 @@
     color: white;
 }
 body {
-    background: rgb(42, 43, 51);
-    color: white;
+    /* fallback for old browsers */
+    /* background: #282625; */
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: -webkit-linear-gradient(to bottom right, rgb(18, 17, 44), rgb(34, 5, 41)); */
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient( rgb(21, 21, 36), rgb(38, 22, 43))
+    
 }
+
+.contenedor {
+	width: 500px;
+	height: 500px;
+	margin-right: auto;
+    margin-left: auto;
+	padding: 20px;
+	overflow: auto;
+	font-family: 'Open Sans';
+	border-radius: 4px;
+}
+
+.contenedor::-webkit-scrollbar {
+	width: 7px;
+}
+
+.contenedor::-webkit-scrollbar-thumb {
+	background: #ff9d00;
+	border-radius: 5px;
+}
+
+    .mask-custom {
+    background: rgba(24, 24, 16, .2);
+    border-radius: 2em;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    background-clip: padding-box;
+    box-shadow: 10px 10px 10px rgba(46, 54, 68, 0.03);
+    }
