@@ -8,7 +8,7 @@ if (formCargarProducto instanceof HTMLFormElement) {
     const data = {}
     formData.forEach((value, key) => (data[key] = value))
 
-    fetch('/api/products', {
+    fetch('/api/products/', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {

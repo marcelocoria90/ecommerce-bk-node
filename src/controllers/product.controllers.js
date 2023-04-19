@@ -8,10 +8,12 @@ const productService = new FileManager(path)
 
 const getProducts = async (req = request, res = response) => {
   try {
-    let products = await PM.getList()/* await productService.getList() */
-    if (req.query.limit) {
-      products = products.slice(0, req.query.limit)
-    }
+    const options = req.query
+    console.log(options)
+    const products = await PM.getList(options)/* await productService.getList() */
+    // if (options.limit) {
+    //   products = products.slice(0, options.limit)
+    // }
     // if (!products.success) { throw new Error('SERVICE_ERROR') }
     res.status(200).json(products)
   } catch (e) {
@@ -21,8 +23,9 @@ const getProducts = async (req = request, res = response) => {
 
 const renderProducts = async (req = request, res = response) => {
   try {
-    const products = await PM.getList()
-    res.render('productos', { pageTitle: 'Productos ✅', products })
+    const products = await PM.getList(req)
+    // console.log(products)
+    res.render('productos', { products })
   } catch (e) {
     res.status(500).json({ ERROR: `${e.message}` })
   }
@@ -41,8 +44,9 @@ const getProductById = async (req = request, res = response) => {
 const newProduct = async (req, res, next) => {
   try {
     const data = req.body
+    console.log(data)
     const result = await PM.save(data)
-    // console.log(result)
+    console.log(result)
     res.json(result)
   } catch (e) {
     res.status(404).json(e.message)

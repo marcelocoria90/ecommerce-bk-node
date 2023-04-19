@@ -52,6 +52,54 @@ class CartManager {
       throw new Error(e.message)
     }
   }
+
+  async deleteProductCart (cid, pid) {
+    try {
+      const result = await cartsDb.findOneAndUpdate(
+        { _id: cid },
+        { $pull: { products: { _id: pid } } }
+      )
+      return result
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
+
+  async updatedCart (cid, data) {
+    try {
+      const result = await cartsDb.findOneAndUpdate(
+        { _id: cid },
+        { $set: { products: data } }
+      )
+      return result
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
+
+  async updatedProductCart (cid, pid, data) {
+    try {
+      const result = await cartsDb.findOneAndUpdate(
+        { _id: cid, 'products._id': pid },
+        { $set: { 'products.$.quantity': data.quantity } }
+      )
+      return result
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
+
+  async deleteProductsCart (cid) {
+    try {
+      const result = await cartsDb.findOneAndUpdate(
+        { _id: cid },
+        { $set: { products: [] } }
+      )
+      return result
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
 }
 
 export const cartManager = new CartManager()
