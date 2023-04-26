@@ -1,6 +1,7 @@
 
 <h1>Productos 📱</h1>
-{{#if products}}
+<h2>Cart: {{cartId}}</h2>
+{{#if payload}}
 <table class="table col-md-6">
   <thead>
     <tr>
@@ -9,16 +10,24 @@
       <th scope="col">Descripción</th>
       <th scope="col">Precio</th>
       <th scope="col">Stock</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    {{#each products}}
+    {{#each payload}}
     <tr>
-      <th scope="row">{{code}}</th>
+      <th scope="row">{{_id}}</th>
       <td>{{title}}</td>
       <td>{{description}}</td>
       <td>{{price}}</td>
       <td>{{stock}}</td>
+      <td>
+        <form method="POST" action="/api/carts/:cid/product">
+          <input type="hidden" name="cid" value="{{cartId}}">
+          <input type="hidden" name="_id" value="{{_id}}">
+          <button type="submit" class="btn btn-success">Agregar a carrito</button>
+        </form>
+      </td>
     </tr>
     {{/each}}
   </tbody>

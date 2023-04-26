@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
+import session from '../middlewares/session.js'
 import { apiRouter } from '../router/api.routes.js'
 import { viewRouter } from '../router/views.routes.js'
 import { engine } from 'express-handlebars'
@@ -13,6 +14,7 @@ app.set('view engine', 'handlebars')
 
 app.use(express.static('./public'))
 app.use(express.json())
+app.use(session)
 
 cnx()
 

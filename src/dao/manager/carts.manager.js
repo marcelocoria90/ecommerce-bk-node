@@ -1,4 +1,5 @@
 import { cartsDb } from '../models/carts.model.js'
+import util, { inspect } from 'node:util'
 
 class CartManager {
   #cartsDb
@@ -6,13 +7,16 @@ class CartManager {
     this.#cartsDb = cartsDb
   }
 
-  async save (data) {
+  async createCart (prods = []) {
     try {
+      // console.log(util.inspect(data, false, 10))
       const newCart = {
-        products: data,
+        products: prods,
         timestamp: new Date()
       }
+      // console.log(newCart)
       const result = await this.#cartsDb.create(newCart)
+      // console.log(result)
       return result
     } catch (e) {
       throw new Error(e.message)
@@ -30,24 +34,41 @@ class CartManager {
 
   async createProductCart (cid, data) {
     try {
-      const { products } = await cartsDb.findOne(
+      let result
+      console.log('createProductCart::::')
+      console.log('cid:::')
+      console.log(cid)
+      console.log('data:::')
+      console.log(data)
+      const { products } = await this.#cartsDb.findOne(
         { _id: cid },
         {
           products: { $elemMatch: { _id: data._id } }
         }
-      )
-      if (products.length > 0) {
-        const result = await cartsDb.findOneAndUpdate(
-          { _id: cid, 'products._id': data._id },
-          { $inc: { 'products.$.quantity': 1 } }
+      ).lean()
+      console.log('carts:::')
+      console.log(inspect(products, false, 10))
+      // console.log(products)
+      if (products) {
+        result = await this.#cartsDb.findOneAndUpdate(
+          { _id: cid, 'carts.products._id': data._id },
+          { $inc: { 'carts.products.$.quantity': 1 } }
         )
-        return result
+        console.log(inspect(result, false, 10))
+        if (result) {
+          console.log('RESULT CART Y PRODUCT:::')
+          console.log(result)
+          return result
+        } else {
+          result = await this.#cartsDb.findOneAndUpdate(
+            { _id: cid },
+            { $push: { products: data._id } }
+          )
+          console.log('RESULT:::')
+          console.log(result)
+          return result
+        }
       }
-      const result = await cartsDb.findOneAndUpdate(
-        { _id: cid },
-        { $push: { products: data } }
-      )
-      return result
     } catch (e) {
       throw new Error(e.message)
     }

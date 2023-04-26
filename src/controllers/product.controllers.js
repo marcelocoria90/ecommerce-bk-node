@@ -2,6 +2,7 @@ import { request, response } from 'express'
 import { FileManager } from '../dao/manager/file.manager.js'
 import { Product } from '../dao/entities/Product.js'
 import { productManager as PM } from '../dao/manager/products.manager.js'
+import { cartManager as CM } from '../dao/manager/carts.manager.js'
 
 const path = './database/products.json'
 const productService = new FileManager(path)
@@ -11,6 +12,7 @@ const getProducts = async (req = request, res = response) => {
     const options = req.query
     console.log(options)
     const products = await PM.getList(options)/* await productService.getList() */
+
     // if (options.limit) {
     //   products = products.slice(0, options.limit)
     // }
@@ -23,9 +25,13 @@ const getProducts = async (req = request, res = response) => {
 
 const renderProducts = async (req = request, res = response) => {
   try {
+    const cart = await CM.createCart()
     const products = await PM.getList(req)
-    // console.log(products)
-    res.render('productos', { products })
+    console.log('RENDER_CART:: 🚩', cart)
+    const { payload } = products
+    const cartId = cart._id
+    console.log('🚩🚩', cartId)
+    res.render('productos', { payload, cartId })
   } catch (e) {
     res.status(500).json({ ERROR: `${e.message}` })
   }

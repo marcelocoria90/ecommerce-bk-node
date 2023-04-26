@@ -30,7 +30,8 @@ class ProductManager {
       const optionsPaginations = {
         sort: { price: sort },
         page,
-        limit
+        limit,
+        lean: true
       }
 
       const result = await this.#productsDb.paginate(query, optionsPaginations)

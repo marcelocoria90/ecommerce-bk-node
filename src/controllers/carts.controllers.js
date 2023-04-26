@@ -1,11 +1,39 @@
 // import { cartFile } from '../dao/manager/cartFile.manager.js'
+import { request, response } from 'express'
 import { cartManager as CM } from '../dao/manager/carts.manager.js'
 
-const createCart = async (req, res) => {
+const createCart = async (req = request, res = response) => {
   try {
+    let result
+
     const data = req.body
-    const newCart = await CM.save(data) /* await cartFile.createCart(data) */
-    res.status(201).json(newCart)
+    console.log('DATA:::')
+    console.log(req.body.cid)
+    const { cid, _id } = data
+    console.log('CID:::🚩')
+    console.log(cid)
+    console.log('_ID:::🚩')
+    console.log(_id)
+    const _cartExist = await CM.getCartById(cid)
+    console.log('EXISTE CART:: 🚩', _cartExist)
+
+    if (_cartExist) {
+      console.log('EXISTE EL CART🚩')
+      if (Array.isArray(_id)) {
+        result = await CM.createProductCart(cid, _id)
+      } else {
+        console.log('NO ES ARRAY')
+        const prod = []
+        prod.push(_id)
+        result = await CM.createProductCart(cid, prod) /* await cartFile.createCart(data) */
+      }
+      res.status(201).json(result)
+    } else {
+      console.log('NO EXISTE EL CART🚩')
+      result = await CM.createCart(_id)
+      res.status(201).json(result)
+    }
+    throw new Error('SERVICE_ERROR')
   } catch (e) {
     res.status(404).json(e.message)
   }
