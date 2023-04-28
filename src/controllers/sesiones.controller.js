@@ -14,7 +14,8 @@ export async function postSesiones (req, res, next) {
   req.session.user = {
     name: usuarioEncontrado.first_name + ' ' + usuarioEncontrado.last_name,
     email: usuarioEncontrado.email,
-    age: usuarioEncontrado.age
+    age: usuarioEncontrado.age,
+    rol: usuarioEncontrado.rol
   }
 
   res.status(201).json(req.session.user)

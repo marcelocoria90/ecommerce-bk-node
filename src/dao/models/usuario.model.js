@@ -5,7 +5,8 @@ const usuarioSchema = new mongoose.Schema({
   password: { type: String, required: true },
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
-  age: { type: Number, required: true }
+  age: { type: Number, required: true },
+  rol: { type: String, required: true }
 }, { versionKey: false })
 
 export const usuarioModel = mongoose.model('usuarios', usuarioSchema)
