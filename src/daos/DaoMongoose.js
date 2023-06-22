@@ -24,7 +24,7 @@ export class DaoMongoose {
     console.log('🚩readOne')
     console.log(criteria)
     const result = await this.#model.findOne(criteria).select({ _id: 0 }).lean()
-    // console.log(result)
+    console.log(result)
     // if (!result) throw new Error('NOT FOUND')
     return result
   }
@@ -59,7 +59,7 @@ export class DaoMongoose {
   // POPULATIONS ----------------------------------------------------------
 
   async readOnePopulated (criteria, localField, from, foreignField) {
-    const [result] = await this.model.aggregate([
+    const [result] = await this.#model.aggregate([
       { $match: criteria },
       { $limit: 1 },
       {
@@ -80,7 +80,7 @@ export class DaoMongoose {
   }
 
   async readManyPopulated (criteria, localField, from, foreignField) {
-    const result = await this.model.aggregate([
+    const result = await this.#model.aggregate([
       { $match: criteria },
       {
         $lookup: {

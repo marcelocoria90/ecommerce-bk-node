@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
+
 import { DaoMongoose } from './DaoMongoose.js'
 
 const userSchema = new mongoose.Schema({
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   last_name: { type: String },
   email: { type: String, required: true, unique: true },
   age: { type: Number },
-  password: { type: String },
+  pass: { type: String },
   carts: {
     type: [
       {
@@ -45,10 +45,6 @@ const userSchema = new mongoose.Schema({
 //     console.log(e)
 //   }
 // }
-
-userSchema.statics.comparePassword = async (password, recivedPassword) => {
-  return await bcrypt.compare(password, recivedPassword)
-}
 
 const userModel = mongoose.model('UserSchema', userSchema)
 

@@ -6,15 +6,15 @@ export class User {
   #username
   #email
   #rol
-  #orders
+  #carts
   #pass
 
-  constructor ({ id = newId(), username, email, pass, rol = 'user', orders = [] }) {
+  constructor ({ id = newId(), username, email, pass, rol = 'user', carts = [] }) {
     this.#id = id
-    this.username = username
+    this.#username = username
     this.#email = email
     this.#rol = rol
-    this.#orders = orders
+    this.#carts = carts
     this.#pass = pass// this.encryptPass(pass)
   }
 
@@ -35,7 +35,7 @@ export class User {
       email: this.#email,
       pass: this.#pass,
       roles: this.#rol,
-      orders: this.#orders
+      carts: this.#carts
     }
   }
 }

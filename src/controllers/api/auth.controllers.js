@@ -20,10 +20,13 @@ export const signupHandler = async (req, res) => {
     const { username, email, password, roles } = req.body
     const passEncrypt = await userRepository.encryptPass(password)
 
+    console.log('🚩email')
+    console.log(email)
+
     const newUser = new User({
       username,
       email,
-      password: passEncrypt
+      pass: passEncrypt
     })
 
     if (roles) {
@@ -34,9 +37,10 @@ export const signupHandler = async (req, res) => {
       newUser.roles = [role._id]
     }
     console.log('🚩newUser')
-    console.log(newUser)
+    console.log(newUser.dto())
 
-    const savedUser = await newUser.save()
+    // const savedUser = await newUser.save()
+    const savedUser = await userRepository.create(newUser.dto())
 
     const token = jwt.sign({ id: savedUser._id }, JWT_SECRET, {
       expiresIn: 1200 // 20 minutes
@@ -55,9 +59,13 @@ export const signinHandler = async (req, res) => {
     const { username, password } = req.body
     const userFound = await userRepository.readOne({ username }) // User.findOne({ email: req.body.email }).populate('roles')
 
+    console.log('🚩userFound')
+    console.log(userFound)
+
     if (!userFound) return res.status(400).json({ message: 'User not found' })
 
-    const matchPassword = await User.comparePassword(password, userFound.password)
+    console.log('🚩matchPassword')
+    const matchPassword = await userRepository.comparePassword(password, { username })
 
     if (!matchPassword) {
       return res.status(401).json({
@@ -72,6 +80,8 @@ export const signinHandler = async (req, res) => {
 
     res.json({ token })
   } catch (e) {
+    console.log('🚩CATH')
+    console.log(e)
     return res.status(500).json(e.message)
   }
 }

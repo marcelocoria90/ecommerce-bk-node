@@ -50,4 +50,21 @@ export class GenericRepository {
       console.log(e)
     }
   }
+
+  async comparePassword (recivedPassword, criteria) {
+    console.log('🚩comparePassword')
+
+    const userFound = await this.#dao.readOne(criteria)
+
+    console.log('🚩userFound')
+    console.log(userFound)
+
+    console.log('🚩password')
+    console.log(userFound.pass)
+
+    const result = await bcrypt.compare(recivedPassword, userFound.pass)
+    console.log('🚩comparePassword')
+    console.log(result)
+    return result
+  }
 }
